@@ -1,7 +1,15 @@
-import { getMasterKey, getEncryptionKey } from "../src/get_key";
-import { aesDecrypt, aesEncrypt } from "../src/aes";
-import { generateSymKey, symDecrypt, symEncrypt } from "../src/sym";
-import { generateRsaPair, rsaDecrypt, rsaEncrypt } from "../src/rsa";
+import {
+  getMasterKey,
+  getEncryptionKey,
+  aesDecrypt,
+  aesEncrypt,
+  generateSymKey,
+  symDecrypt,
+  symEncrypt,
+  generateRsaPair,
+  rsaDecrypt,
+  rsaEncrypt,
+} from "../src";
 
 const originalText = "Hello";
 
