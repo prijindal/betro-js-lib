@@ -14,4 +14,5 @@ __exportStar(require("./aes"), exports);
 __exportStar(require("./get_key"), exports);
 __exportStar(require("./rsa"), exports);
 __exportStar(require("./sym"), exports);
+__exportStar(require("./master_hash"), exports);
 //# sourceMappingURL=index.js.map
