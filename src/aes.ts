@@ -23,19 +23,9 @@ export const aesEncrypt = async (
   );
 
   const encrypted_data = Buffer.from(enc);
-  const encryption_mac_urlencoded = encryption_mac
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
   const hmac = await crypto.subtle.importKey(
-    "jwk",
-    {
-      alg: "HS256",
-      ext: true,
-      k: encryption_mac_urlencoded,
-      key_ops: ["sign", "verify"],
-      kty: "oct",
-    },
+    "raw",
+    Buffer.from(encryption_mac, "base64"),
     {
       name: "HMAC",
       hash: "SHA-256",
@@ -58,20 +48,9 @@ export const aesDecrypt = async (
   encrypted_data: string
 ): Promise<{ isVerified: boolean; data: Buffer }> => {
   const data_bytes = Buffer.from(encrypted_data, "base64");
-  const encryption_mac_urlencoded = encryption_mac
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
-
   const hmac = await crypto.subtle.importKey(
-    "jwk",
-    {
-      alg: "HS256",
-      ext: true,
-      k: encryption_mac_urlencoded,
-      key_ops: ["sign", "verify"],
-      kty: "oct",
-    },
+    "raw",
+    Buffer.from(encryption_mac, "base64"),
     {
       name: "HMAC",
       hash: "SHA-256",
