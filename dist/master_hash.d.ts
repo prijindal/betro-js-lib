@@ -1,1 +1,1 @@
-export declare const getMasterHash: (master_key: string, password: string) => string;
+export declare const getMasterHash: (master_key: string, password: string) => Promise<string>;

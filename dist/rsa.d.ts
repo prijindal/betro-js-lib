@@ -1,7 +1,7 @@
 /// <reference types="node" />
-export declare const generateRsaPair: () => {
+export declare const generateRsaPair: () => Promise<{
     publicKey: string;
     privateKey: string;
-};
-export declare const rsaEncrypt: (publicKey: string, data: Buffer) => string;
-export declare const rsaDecrypt: (privateKey: string, encrypted: string) => Buffer;
+}>;
+export declare const rsaEncrypt: (public_key: string, data: Buffer) => Promise<string>;
+export declare const rsaDecrypt: (private_key: string, encrypted: string) => Promise<Buffer>;
