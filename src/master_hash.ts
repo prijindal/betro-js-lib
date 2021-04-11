@@ -1,7 +1,28 @@
-import crypto from "crypto";
+import { Crypto } from "@peculiar/webcrypto";
+const crypto = new Crypto();
+import { HASH_LENGTH, ITERATIONS } from "./constants";
 
-export const getMasterHash = (master_key: string, password: string): string => {
+export const getMasterHash = async (
+  master_key: string,
+  password: string
+): Promise<string> => {
   const salt = Buffer.from(password, "base64");
-  const hash = crypto.scryptSync(master_key, salt, 32);
-  return hash.toString("base64");
+  const key = await crypto.subtle.importKey(
+    "raw", // only raw format
+    Buffer.from(master_key), // BufferSource
+    "PBKDF2",
+    false, // only false
+    ["deriveBits", "deriveKey"]
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt,
+      iterations: ITERATIONS,
+      hash: "SHA-256",
+    },
+    key,
+    HASH_LENGTH
+  );
+  return Buffer.from(derivedBits).toString("base64");
 };

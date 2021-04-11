@@ -30,11 +30,10 @@
   ],
   "homepage": "https://github.com/prijindal/betro-js-lib#readme",
   "dependencies": {
-    "futoin-hkdf": "^1.3.3"
+    "@peculiar/webcrypto": "^1.1.6"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
-    "@types/node": "^14.14.37",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "eslint": "^7.23.0",

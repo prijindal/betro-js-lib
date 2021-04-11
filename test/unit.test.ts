@@ -9,43 +9,52 @@ import {
   generateRsaPair,
   rsaDecrypt,
   rsaEncrypt,
+  getMasterHash,
 } from "../src";
 
 const originalText = "Hello";
 
 describe("Crypto functions", () => {
-  it("Test AES", () => {
-    const master_key = getMasterKey("user@example.com", "123456");
-    const { encryption_key, encryption_mac } = getEncryptionKey(master_key);
+  it("Test AES", async () => {
+    const master_key = await getMasterKey("user@example.com", "123456");
+    const { encryption_key, encryption_mac } = await getEncryptionKey(
+      master_key
+    );
+    const master_hash = await getMasterHash(master_key, "123456");
+    expect(master_hash).toBeTruthy();
 
-    const encryptedData = aesEncrypt(
+    const encryptedData = await aesEncrypt(
       encryption_key,
       encryption_mac,
       Buffer.from(originalText)
     );
 
-    const decrypted = aesDecrypt(encryption_key, encryption_mac, encryptedData);
+    const decrypted = await aesDecrypt(
+      encryption_key,
+      encryption_mac,
+      encryptedData
+    );
     expect(decrypted.isVerified).toEqual(true);
     if (decrypted.isVerified) {
       expect(decrypted.data.toString()).toEqual(originalText);
     }
   });
 
-  it("Test Sym key", () => {
-    const symKey = generateSymKey();
+  it("Test Sym key", async () => {
+    const symKey = await generateSymKey();
 
-    const symEncrypted = symEncrypt(symKey, Buffer.from(originalText));
+    const symEncrypted = await symEncrypt(symKey, Buffer.from(originalText));
 
-    const symDecrypted = symDecrypt(symKey, symEncrypted);
+    const symDecrypted = await symDecrypt(symKey, symEncrypted);
     expect(symDecrypted.toString()).toEqual(originalText);
   });
 
-  it("Test rsa key", () => {
-    const { publicKey, privateKey } = generateRsaPair();
+  it("Test rsa key", async () => {
+    const { publicKey, privateKey } = await generateRsaPair();
 
-    const rsaDecrypted = rsaDecrypt(
+    const rsaDecrypted = await rsaDecrypt(
       privateKey,
-      rsaEncrypt(publicKey, Buffer.from(originalText))
+      await rsaEncrypt(publicKey, Buffer.from(originalText))
     );
     expect(rsaDecrypted.toString()).toEqual(originalText);
   });
