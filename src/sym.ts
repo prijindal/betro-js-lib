@@ -1,5 +1,4 @@
-import { Crypto } from "@peculiar/webcrypto";
-const crypto = new Crypto();
+import crypto from "./crypto";
 
 const algorithm = "AES-CBC";
 const KEY_SIZE = 256;

@@ -1,5 +1,4 @@
-import { Crypto } from "@peculiar/webcrypto";
-const crypto = new Crypto();
+import crypto from "./crypto";
 
 export const aesEncrypt = async (
   encryption_key: string,
@@ -25,9 +24,9 @@ export const aesEncrypt = async (
 
   const encrypted_data = Buffer.from(enc);
   const encryption_mac_urlencoded = encryption_mac
-    .replace("+", "-")
-    .replace("/", "_")
-    .replace(/=+$/, "");
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
   const hmac = await crypto.subtle.importKey(
     "jwk",
     {
@@ -60,9 +59,9 @@ export const aesDecrypt = async (
 ): Promise<{ isVerified: boolean; data: Buffer }> => {
   const data_bytes = Buffer.from(encrypted_data, "base64");
   const encryption_mac_urlencoded = encryption_mac
-    .replace("+", "-")
-    .replace("/", "_")
-    .replace(/=+$/, "");
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
 
   const hmac = await crypto.subtle.importKey(
     "jwk",

@@ -1,5 +1,4 @@
-import { Crypto } from "@peculiar/webcrypto";
-const crypto = new Crypto();
+import crypto from "./crypto";
 import { HASH_LENGTH, ITERATIONS } from "./constants";
 
 export const getMasterHash = async (

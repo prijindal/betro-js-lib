@@ -1,5 +1,4 @@
-import { Crypto } from "@peculiar/webcrypto";
-const crypto = new Crypto();
+import crypto from "./crypto";
 
 export const generateRsaPair = async (): Promise<{
   publicKey: string;
