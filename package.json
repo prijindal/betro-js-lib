@@ -24,6 +24,7 @@
     "url": "https://github.com/prijindal/betro-js-lib/issues"
   },
   "pre-commit": [
+    "build",
     "test",
     "lint",
     "prettier"

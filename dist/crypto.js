@@ -2,7 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 let subtle;
 let getRandomValues;
-if (process.version.indexOf("v15") == 0) {
+if (window != null && window.crypto != null) {
+    subtle = window.crypto.subtle;
+    getRandomValues = window.crypto.getRandomValues;
+}
+else if (process.version.indexOf("v15") == 0) {
     const webcrypto = require("crypto").webcrypto;
     subtle = webcrypto.subtle;
     getRandomValues = webcrypto.getRandomValues;

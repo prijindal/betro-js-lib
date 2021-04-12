@@ -10,6 +10,6 @@ module.exports = {
   },
   collectCoverageFrom: ["src/**/*.ts"],
   testMatch: ["**/test/**/*.test.(ts|js)", "**/src/**/*.test.(ts|js)"],
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   testTimeout: 5000,
 };
