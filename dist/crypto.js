@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 let subtle;
 let getRandomValues;
-if (window != null && window.crypto != null) {
+if (typeof window != undefined && window != null && window.crypto != null) {
     subtle = window.crypto.subtle;
     getRandomValues = window.crypto.getRandomValues;
 }
