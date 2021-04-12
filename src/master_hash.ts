@@ -5,7 +5,7 @@ export const getMasterHash = async (
   master_key: string,
   password: string
 ): Promise<string> => {
-  const salt = Buffer.from(password, "base64");
+  const salt = Buffer.from(password);
   const key = await crypto.subtle.importKey(
     "raw", // only raw format
     Buffer.from(master_key), // BufferSource

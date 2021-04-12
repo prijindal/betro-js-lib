@@ -52,10 +52,14 @@ describe("Crypto functions", () => {
   it("Test rsa key", async () => {
     const { publicKey, privateKey } = await generateRsaPair();
 
-    const rsaDecrypted = await rsaDecrypt(
-      privateKey,
-      await rsaEncrypt(publicKey, Buffer.from(originalText))
-    );
+    const rsaEncrypted = await rsaEncrypt(publicKey, Buffer.from(originalText));
+
+    console.log(publicKey);
+    console.log(privateKey);
+    console.log(rsaEncrypted);
+
+    const rsaDecrypted = await rsaDecrypt(privateKey, rsaEncrypted);
+    console.log(rsaDecrypted);
     expect(rsaDecrypted.toString()).toEqual(originalText);
   });
 });

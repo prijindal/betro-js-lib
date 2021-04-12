@@ -1,4 +1,5 @@
 import crypto from "./crypto";
+const RSA_ALGORITHM = "RSA-OAEP";
 
 export const generateRsaPair = async (): Promise<{
   publicKey: string;
@@ -6,8 +7,8 @@ export const generateRsaPair = async (): Promise<{
 }> => {
   const keys = await crypto.subtle.generateKey(
     {
-      name: "RSA-OAEP",
-      hash: "SHA-512", // SHA-1, SHA-256, SHA-384, or SHA-512
+      name: RSA_ALGORITHM,
+      hash: "SHA-256", // SHA-1, SHA-256, SHA-384, or SHA-512
       publicExponent: new Uint8Array([1, 0, 1]), // 0x03 or 0x010001
       modulusLength: 4096, // 1024, 2048, or 4096
     },
@@ -30,7 +31,7 @@ export const rsaEncrypt = async (
     "spki",
     Buffer.from(public_key, "base64"),
     {
-      name: "RSA-OAEP",
+      name: RSA_ALGORITHM,
       hash: "SHA-256",
     },
     false,
@@ -38,7 +39,7 @@ export const rsaEncrypt = async (
   );
   const encData = await crypto.subtle.encrypt(
     {
-      name: "RSA-OAEP",
+      name: RSA_ALGORITHM,
     },
     publicKey, // RSA public key
     data // BufferSource
@@ -54,7 +55,7 @@ export const rsaDecrypt = async (
     "pkcs8",
     Buffer.from(private_key, "base64"),
     {
-      name: "RSA-OAEP",
+      name: RSA_ALGORITHM,
       hash: "SHA-256",
     },
     false,
@@ -62,7 +63,7 @@ export const rsaDecrypt = async (
   );
   const data = await crypto.subtle.decrypt(
     {
-      name: "RSA-OAEP",
+      name: RSA_ALGORITHM,
     },
     privateKey,
     Buffer.from(encrypted, "base64")

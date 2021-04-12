@@ -7,7 +7,7 @@ exports.getMasterHash = void 0;
 const crypto_1 = __importDefault(require("./crypto"));
 const constants_1 = require("./constants");
 const getMasterHash = async (master_key, password) => {
-    const salt = Buffer.from(password, "base64");
+    const salt = Buffer.from(password);
     const key = await crypto_1.default.subtle.importKey("raw", // only raw format
     Buffer.from(master_key), // BufferSource
     "PBKDF2", false, // only false

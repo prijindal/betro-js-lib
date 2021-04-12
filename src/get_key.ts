@@ -6,7 +6,7 @@ export const getMasterKey = async (
   email: string,
   password: string
 ): Promise<string> => {
-  const salt = Buffer.from(email, "base64");
+  const salt = Buffer.from(email);
   const key = await crypto.subtle.importKey(
     "raw", // only raw format
     Buffer.from(password), // BufferSource
@@ -32,12 +32,12 @@ export const getEncryptionKey = async (
 ): Promise<{ encryption_key: string; encryption_mac: string }> => {
   const key = await crypto.subtle.importKey(
     "raw", // only raw format
-    Buffer.from(master_key), // BufferSource
+    Buffer.from(master_key, "base64"), // BufferSource
     "HKDF",
     false, // only false
     ["deriveBits", "deriveKey"]
   );
-  const encryption_key = await crypto.subtle.deriveBits(
+  const encryption_key_crypto = await crypto.subtle.deriveKey(
     {
       name: "HKDF",
       salt: Buffer.from("sign"),
@@ -45,9 +45,15 @@ export const getEncryptionKey = async (
       hash: "SHA-256",
     },
     key,
-    HASH_LENGTH
+    {
+      name: "HMAC",
+      hash: "SHA-256",
+      length: HASH_LENGTH,
+    },
+    true,
+    ["sign", "verify"]
   );
-  const encryption_mac = await crypto.subtle.deriveBits(
+  const encryption_mac_crypto = await crypto.subtle.deriveKey(
     {
       name: "HKDF",
       salt: Buffer.from("sign"),
@@ -55,7 +61,21 @@ export const getEncryptionKey = async (
       hash: "SHA-256",
     },
     key,
-    HASH_LENGTH
+    {
+      name: "HMAC",
+      hash: "SHA-256",
+      length: HASH_LENGTH,
+    },
+    true,
+    ["sign", "verify"]
+  );
+  const encryption_key = await crypto.subtle.exportKey(
+    "raw",
+    encryption_key_crypto
+  );
+  const encryption_mac = await crypto.subtle.exportKey(
+    "raw",
+    encryption_mac_crypto
   );
   return {
     encryption_key: Buffer.from(encryption_key).toString("base64"),
