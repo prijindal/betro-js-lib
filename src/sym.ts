@@ -28,7 +28,7 @@ export const symEncrypt = async (
     false,
     ["encrypt"]
   );
-  const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
+  const iv = Buffer.from(crypto.getRandomValues(new Uint8Array(IV_LENGTH)));
   const encData = await crypto.subtle.encrypt(
     {
       name: algorithm,

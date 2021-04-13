@@ -12,7 +12,7 @@ export const aesEncrypt = async (
     false,
     ["encrypt"]
   );
-  const iv = crypto.getRandomValues(new Uint8Array(16));
+  const iv = Buffer.from(crypto.getRandomValues(new Uint8Array(16)));
   const enc = await crypto.subtle.encrypt(
     {
       name: "AES-CBC",

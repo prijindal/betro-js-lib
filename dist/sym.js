@@ -19,7 +19,7 @@ const generateSymKey = async () => {
 exports.generateSymKey = generateSymKey;
 const symEncrypt = async (sym_key, data) => {
     const key = await crypto_1.default.subtle.importKey("raw", Buffer.from(sym_key, "base64"), algorithm, false, ["encrypt"]);
-    const iv = crypto_1.default.getRandomValues(new Uint8Array(IV_LENGTH));
+    const iv = Buffer.from(crypto_1.default.getRandomValues(new Uint8Array(IV_LENGTH)));
     const encData = await crypto_1.default.subtle.encrypt({
         name: algorithm,
         iv,

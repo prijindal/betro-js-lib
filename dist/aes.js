@@ -7,7 +7,7 @@ exports.aesDecrypt = exports.aesEncrypt = void 0;
 const crypto_1 = __importDefault(require("./crypto"));
 const aesEncrypt = async (encryption_key, encryption_mac, data) => {
     const key = await crypto_1.default.subtle.importKey("raw", Buffer.from(encryption_key, "base64"), "AES-CBC", false, ["encrypt"]);
-    const iv = crypto_1.default.getRandomValues(new Uint8Array(16));
+    const iv = Buffer.from(crypto_1.default.getRandomValues(new Uint8Array(16)));
     const enc = await crypto_1.default.subtle.encrypt({
         name: "AES-CBC",
         iv,
