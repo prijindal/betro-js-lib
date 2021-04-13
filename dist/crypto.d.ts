@@ -1,5 +1,2 @@
-declare const _default: {
-    subtle: SubtleCrypto;
-    getRandomValues: any;
-};
-export default _default;
+declare const moduleCrypto: Crypto;
+export default moduleCrypto;

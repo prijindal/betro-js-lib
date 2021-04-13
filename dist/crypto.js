@@ -4,7 +4,9 @@ let subtle;
 let getRandomValues;
 if (typeof window !== "undefined" && window != null && window.crypto != null) {
     subtle = window.crypto.subtle;
-    getRandomValues = window.crypto.getRandomValues;
+    getRandomValues = (v) => {
+        return window.crypto.getRandomValues(v);
+    };
 }
 else if (process.version.indexOf("v15") == 0) {
     const webcrypto = require("crypto").webcrypto;
@@ -17,8 +19,9 @@ else {
     subtle = crypto.subtle;
     getRandomValues = crypto.getRandomValues;
 }
-exports.default = {
+const moduleCrypto = {
     subtle,
     getRandomValues,
 };
+exports.default = moduleCrypto;
 //# sourceMappingURL=crypto.js.map
