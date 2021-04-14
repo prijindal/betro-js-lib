@@ -54,12 +54,7 @@ describe("Crypto functions", () => {
 
     const rsaEncrypted = await rsaEncrypt(publicKey, Buffer.from(originalText));
 
-    console.log(publicKey);
-    console.log(privateKey);
-    console.log(rsaEncrypted);
-
     const rsaDecrypted = await rsaDecrypt(privateKey, rsaEncrypted);
-    console.log(rsaDecrypted);
     expect(rsaDecrypted.toString()).toEqual(originalText);
   });
 });
