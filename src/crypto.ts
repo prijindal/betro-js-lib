@@ -21,7 +21,10 @@ if (typeof window !== "undefined" && window != null && window.crypto != null) {
   ): T => {
     return window.crypto.getRandomValues<T>(v);
   };
-} else if (process.version.indexOf("v15") == 0) {
+} else if (
+  process.version.indexOf("v15") == 0 ||
+  process.version.indexOf("v16") == 0
+) {
   const webcrypto = require("crypto").webcrypto;
   subtle = webcrypto.subtle;
   getRandomValues = webcrypto.getRandomValues;
