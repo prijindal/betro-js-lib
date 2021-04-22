@@ -12,7 +12,8 @@
     "prettier": "prettier src test --write",
     "test": "jest --coverage",
     "watch-test": "npm run test -- --watchAll",
-    "watch-ts": "tsc -w"
+    "watch-ts": "tsc -w",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -23,12 +24,6 @@
   "bugs": {
     "url": "https://github.com/prijindal/betro-js-lib/issues"
   },
-  "pre-commit": [
-    "build",
-    "test",
-    "lint",
-    "prettier"
-  ],
   "homepage": "https://github.com/prijindal/betro-js-lib#readme",
   "dependencies": {
     "@peculiar/webcrypto": "^1.1.6"
@@ -40,6 +35,7 @@
     "@typescript-eslint/parser": "^4.22.0",
     "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.2.0",
+    "husky": "^6.0.0",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
     "pre-commit": "^1.2.2",
