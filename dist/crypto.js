@@ -8,7 +8,8 @@ if (typeof window !== "undefined" && window != null && window.crypto != null) {
         return window.crypto.getRandomValues(v);
     };
 }
-else if (process.version.indexOf("v15") == 0) {
+else if (process.version.indexOf("v15") == 0 ||
+    process.version.indexOf("v16") == 0) {
     const webcrypto = require("crypto").webcrypto;
     subtle = webcrypto.subtle;
     getRandomValues = webcrypto.getRandomValues;
