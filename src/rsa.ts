@@ -1,6 +1,9 @@
 import crypto from "./crypto";
 const RSA_ALGORITHM = "RSA-OAEP";
 
+const KEY_SIZE = 2048;
+const HASH = "SHA-256";
+
 export const generateRsaPair = async (): Promise<{
   publicKey: string;
   privateKey: string;
@@ -8,9 +11,9 @@ export const generateRsaPair = async (): Promise<{
   const keys = await crypto.subtle.generateKey(
     {
       name: RSA_ALGORITHM,
-      hash: "SHA-256", // SHA-1, SHA-256, SHA-384, or SHA-512
+      hash: HASH, // SHA-1, SHA-256, SHA-384, or SHA-512
       publicExponent: new Uint8Array([1, 0, 1]), // 0x03 or 0x010001
-      modulusLength: 4096, // 1024, 2048, or 4096
+      modulusLength: KEY_SIZE, // 1024, 2048, or 4096
     },
     true,
     ["encrypt", "decrypt"]
@@ -32,7 +35,7 @@ export const rsaEncrypt = async (
     Buffer.from(public_key, "base64"),
     {
       name: RSA_ALGORITHM,
-      hash: "SHA-256",
+      hash: HASH,
     },
     false,
     ["encrypt"]
@@ -56,7 +59,7 @@ export const rsaDecrypt = async (
     Buffer.from(private_key, "base64"),
     {
       name: RSA_ALGORITHM,
-      hash: "SHA-256",
+      hash: HASH,
     },
     false,
     ["decrypt"]
