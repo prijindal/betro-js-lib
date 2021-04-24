@@ -1,17 +1,34 @@
 import crypto from "./crypto";
 
+const HMAC_ALGORITHM = {
+  name: "HMAC",
+  hash: "SHA-256",
+};
+
+const importAesKey = (key: string, keyUsage: KeyUsage[]) =>
+  crypto.subtle.importKey(
+    "raw",
+    Buffer.from(key, "base64"),
+    "AES-CBC",
+    false,
+    keyUsage
+  );
+
+const importHmacKey = (key: string, keyUsage: KeyUsage[]) =>
+  crypto.subtle.importKey(
+    "raw",
+    Buffer.from(key, "base64"),
+    HMAC_ALGORITHM,
+    false,
+    keyUsage
+  );
+
 export const aesEncrypt = async (
   encryption_key: string,
   encryption_mac: string,
   data: Buffer
 ): Promise<string> => {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    Buffer.from(encryption_key, "base64"),
-    "AES-CBC",
-    false,
-    ["encrypt"]
-  );
+  const key = await importAesKey(encryption_key, ["encrypt"]);
   const iv = Buffer.from(crypto.getRandomValues(new Uint8Array(16)));
   const enc = await crypto.subtle.encrypt(
     {
@@ -23,16 +40,7 @@ export const aesEncrypt = async (
   );
 
   const encrypted_data = Buffer.from(enc);
-  const hmac = await crypto.subtle.importKey(
-    "raw",
-    Buffer.from(encryption_mac, "base64"),
-    {
-      name: "HMAC",
-      hash: "SHA-256",
-    },
-    false,
-    ["sign"]
-  );
+  const hmac = await importHmacKey(encryption_mac, ["sign"]);
   const signature = await crypto.subtle.sign(
     "HMAC",
     hmac,
@@ -48,16 +56,7 @@ export const aesDecrypt = async (
   encrypted_data: string
 ): Promise<{ isVerified: boolean; data: Buffer }> => {
   const data_bytes = Buffer.from(encrypted_data, "base64");
-  const hmac = await crypto.subtle.importKey(
-    "raw",
-    Buffer.from(encryption_mac, "base64"),
-    {
-      name: "HMAC",
-      hash: "SHA-256",
-    },
-    false,
-    ["verify"]
-  );
+  const hmac = await importHmacKey(encryption_mac, ["verify"]);
   const isVerified = await crypto.subtle.verify(
     "HMAC",
     hmac,
@@ -70,13 +69,7 @@ export const aesDecrypt = async (
       data: null,
     };
   }
-  const key = await crypto.subtle.importKey(
-    "raw", // raw or jwk
-    Buffer.from(encryption_key, "base64"),
-    "AES-CBC",
-    false, // extractable
-    ["decrypt"]
-  );
+  const key = await importAesKey(encryption_key, ["decrypt"]);
   const iv = data_bytes.slice(32, 48);
   const data = await crypto.subtle.decrypt(
     {
