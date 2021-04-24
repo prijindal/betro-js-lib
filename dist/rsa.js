@@ -41,10 +41,15 @@ const rsaDecrypt = async (private_key, encrypted) => {
         name: RSA_ALGORITHM,
         hash: HASH,
     }, false, ["decrypt"]);
-    const data = await crypto_1.default.subtle.decrypt({
-        name: RSA_ALGORITHM,
-    }, privateKey, Buffer.from(encrypted, "base64"));
-    return Buffer.from(data);
+    try {
+        const data = await crypto_1.default.subtle.decrypt({
+            name: RSA_ALGORITHM,
+        }, privateKey, Buffer.from(encrypted, "base64"));
+        return Buffer.from(data);
+    }
+    catch (e) {
+        return null;
+    }
 };
 exports.rsaDecrypt = rsaDecrypt;
 //# sourceMappingURL=rsa.js.map

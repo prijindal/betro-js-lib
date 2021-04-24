@@ -53,7 +53,7 @@ export const rsaEncrypt = async (
 export const rsaDecrypt = async (
   private_key: string,
   encrypted: string
-): Promise<Buffer> => {
+): Promise<Buffer | null> => {
   const privateKey = await crypto.subtle.importKey(
     "pkcs8",
     Buffer.from(private_key, "base64"),
@@ -64,12 +64,16 @@ export const rsaDecrypt = async (
     false,
     ["decrypt"]
   );
-  const data = await crypto.subtle.decrypt(
-    {
-      name: RSA_ALGORITHM,
-    },
-    privateKey,
-    Buffer.from(encrypted, "base64")
-  );
-  return Buffer.from(data);
+  try {
+    const data = await crypto.subtle.decrypt(
+      {
+        name: RSA_ALGORITHM,
+      },
+      privateKey,
+      Buffer.from(encrypted, "base64")
+    );
+    return Buffer.from(data);
+  } catch (e) {
+    return null;
+  }
 };

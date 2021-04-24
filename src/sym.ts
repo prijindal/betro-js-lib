@@ -45,7 +45,7 @@ export const symEncrypt = async (
 export const symDecrypt = async (
   sym_key: string,
   encrypted_data: string
-): Promise<Buffer> => {
+): Promise<Buffer | null> => {
   const key = await crypto.subtle.importKey(
     "raw", // raw or jwk
     Buffer.from(sym_key, "base64"),
@@ -55,13 +55,17 @@ export const symDecrypt = async (
   );
   const data_bytes = Buffer.from(encrypted_data, "base64");
   const iv = data_bytes.slice(0, IV_LENGTH);
-  const data = await crypto.subtle.decrypt(
-    {
-      name: algorithm,
-      iv, // BufferSource
-    },
-    key, // AES key
-    data_bytes.slice(IV_LENGTH) // BufferSource
-  );
-  return Buffer.from(data);
+  try {
+    const data = await crypto.subtle.decrypt(
+      {
+        name: algorithm,
+        iv, // BufferSource
+      },
+      key, // AES key
+      data_bytes.slice(IV_LENGTH) // BufferSource
+    );
+    return Buffer.from(data);
+  } catch (e) {
+    return null;
+  }
 };

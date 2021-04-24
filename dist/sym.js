@@ -35,13 +35,18 @@ const symDecrypt = async (sym_key, encrypted_data) => {
     ["decrypt"]);
     const data_bytes = Buffer.from(encrypted_data, "base64");
     const iv = data_bytes.slice(0, IV_LENGTH);
-    const data = await crypto_1.default.subtle.decrypt({
-        name: algorithm,
-        iv, // BufferSource
-    }, key, // AES key
-    data_bytes.slice(IV_LENGTH) // BufferSource
-    );
-    return Buffer.from(data);
+    try {
+        const data = await crypto_1.default.subtle.decrypt({
+            name: algorithm,
+            iv, // BufferSource
+        }, key, // AES key
+        data_bytes.slice(IV_LENGTH) // BufferSource
+        );
+        return Buffer.from(data);
+    }
+    catch (e) {
+        return null;
+    }
 };
 exports.symDecrypt = symDecrypt;
 //# sourceMappingURL=sym.js.map
