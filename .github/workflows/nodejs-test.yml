@@ -21,7 +21,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    - run: npm ci --no-optional
     - run: npm run test
     - uses: codecov/codecov-action@v1
       with:
