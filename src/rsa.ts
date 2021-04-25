@@ -26,20 +26,27 @@ export const generateRsaPair = async (): Promise<{
   };
 };
 
-export const rsaEncrypt = async (
-  public_key: string,
-  data: Buffer
-): Promise<string> => {
-  const publicKey = await crypto.subtle.importKey(
-    "spki",
-    Buffer.from(public_key, "base64"),
+const importRsaKey = (
+  format: "spki" | "pkcs8",
+  key: string,
+  keyUsage: KeyUsage[]
+) =>
+  crypto.subtle.importKey(
+    format,
+    Buffer.from(key, "base64"),
     {
       name: RSA_ALGORITHM,
       hash: HASH,
     },
     false,
-    ["encrypt"]
+    keyUsage
   );
+
+export const rsaEncrypt = async (
+  public_key: string,
+  data: Buffer
+): Promise<string> => {
+  const publicKey = await importRsaKey("spki", public_key, ["encrypt"]);
   const encData = await crypto.subtle.encrypt(
     {
       name: RSA_ALGORITHM,
@@ -54,16 +61,7 @@ export const rsaDecrypt = async (
   private_key: string,
   encrypted: string
 ): Promise<Buffer | null> => {
-  const privateKey = await crypto.subtle.importKey(
-    "pkcs8",
-    Buffer.from(private_key, "base64"),
-    {
-      name: RSA_ALGORITHM,
-      hash: HASH,
-    },
-    false,
-    ["decrypt"]
-  );
+  const privateKey = await importRsaKey("pkcs8", private_key, ["decrypt"]);
   try {
     const data = await crypto.subtle.decrypt(
       {
