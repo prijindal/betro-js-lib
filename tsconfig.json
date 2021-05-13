@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "module": "ESNext",
+    "module": "CommonJS",
     "allowJs": true,
     "declaration": true,
     "esModuleInterop": true,
