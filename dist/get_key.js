@@ -7,12 +7,12 @@ exports.getEncryptionKey = exports.getMasterKey = void 0;
 const crypto_1 = __importDefault(require("./crypto"));
 const constants_1 = require("./constants");
 const importKey = (key, algorithm) => crypto_1.default.subtle.importKey("raw", // only raw format
-Buffer.from(key, "base64"), // BufferSource
+key, // BufferSource
 algorithm, false, // only false
 ["deriveBits", "deriveKey"]);
 const getMasterKey = async (email, password) => {
     const salt = Buffer.from(email);
-    const key = await importKey(password, "PBKDF2");
+    const key = await importKey(Buffer.from(password), "PBKDF2");
     const derivedBits = await crypto_1.default.subtle.deriveBits({
         name: "PBKDF2",
         salt,
@@ -39,7 +39,7 @@ const hkdfDeriveAndExport = async (key, info) => {
     return exported_key;
 };
 const getEncryptionKey = async (master_key) => {
-    const key = await importKey(master_key, "HKDF");
+    const key = await importKey(Buffer.from(master_key, "base64"), "HKDF");
     const encryption_key = await hkdfDeriveAndExport(key, "enc");
     const encryption_mac = await hkdfDeriveAndExport(key, "mac");
     return Buffer.concat([
