@@ -2,10 +2,10 @@ import crypto from "./crypto";
 
 import { HASH_LENGTH, ITERATIONS } from "./constants";
 
-const importKey = (key: string, algorithm: string) =>
+const importKey = (key: Buffer, algorithm: string) =>
   crypto.subtle.importKey(
     "raw", // only raw format
-    Buffer.from(key, "base64"), // BufferSource
+    key, // BufferSource
     algorithm,
     false, // only false
     ["deriveBits", "deriveKey"]
@@ -16,7 +16,7 @@ export const getMasterKey = async (
   password: string
 ): Promise<string> => {
   const salt = Buffer.from(email);
-  const key = await importKey(password, "PBKDF2");
+  const key = await importKey(Buffer.from(password), "PBKDF2");
   const derivedBits = await crypto.subtle.deriveBits(
     {
       name: "PBKDF2",
@@ -56,7 +56,7 @@ const hkdfDeriveAndExport = async (key: CryptoKey, info: string) => {
 };
 
 export const getEncryptionKey = async (master_key: string): Promise<string> => {
-  const key = await importKey(master_key, "HKDF");
+  const key = await importKey(Buffer.from(master_key, "base64"), "HKDF");
   const encryption_key = await hkdfDeriveAndExport(key, "enc");
   const encryption_mac = await hkdfDeriveAndExport(key, "mac");
   return Buffer.concat([
