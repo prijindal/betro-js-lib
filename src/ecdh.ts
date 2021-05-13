@@ -57,6 +57,26 @@ export const deriveEcdhSymKey = async (
     true, //whether the derived key is extractable (i.e. can be used in exportKey)
     ["encrypt", "decrypt"] //limited to the options in that algorithm's importKey
   );
-  const raw = await crypto.subtle.exportKey("raw", keyData);
-  return Buffer.from(raw).toString("base64");
+  const macData = await window.crypto.subtle.deriveKey(
+    {
+      name: ECDH_ALGORITHM,
+      //   namedCurve: NAMED_CURVE, //can be "P-256", "P-384", or "P-521"
+      public: publicKey, //an ECDH public key from generateKey or importKey
+    },
+    privateKey, //your ECDH private key from generateKey or importKey
+    {
+      //the key type you want to create based on the derived bits
+      name: "HMAC", //can be any AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH", or "HMAC")
+      //the generateKey parameters for that type of algorithm
+      hash: { name: "SHA-256" },
+      length: 256, //can be  128, 192, or 256
+    },
+    true, //whether the derived key is extractable (i.e. can be used in exportKey)
+    ["sign", "verify"] //limited to the options in that algorithm's importKey
+  );
+  const rawKey = await crypto.subtle.exportKey("raw", keyData);
+  const rawMac = await crypto.subtle.exportKey("raw", macData);
+  return Buffer.concat([Buffer.from(rawKey), Buffer.from(rawMac)]).toString(
+    "base64"
+  );
 };
