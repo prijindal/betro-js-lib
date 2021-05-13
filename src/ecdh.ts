@@ -1,12 +1,39 @@
 import crypto from "./crypto";
+// import { sharedKey, generateKeyPair } from "curve25519-js";
+// import { getEncryptionKey } from "./get_key";
+
+// export const generateExchangePair = async (): Promise<{
+//   publicKey: string;
+//   privateKey: string;
+// }> => {
+//   const seed = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+//   const keys = generateKeyPair(seed);
+//   return {
+//     publicKey: Buffer.from(keys.public).toString("base64"),
+//     privateKey: Buffer.from(keys.private).toString("base64"),
+//   };
+// };
+
+// export const deriveExchangeSymKey = async (
+//   public_key: string,
+//   private_key: string
+// ): Promise<string> => {
+//   const publicKey = Uint8Array.from(Buffer.from(public_key, "base64"));
+//   const privateKey = Uint8Array.from(Buffer.from(private_key, "base64"));
+//   const secret = sharedKey(privateKey, publicKey);
+//   return getEncryptionKey(Buffer.from(secret).toString("base64"));
+// };
+
 const ECDH_ALGORITHM = "ECDH";
 
 const NAMED_CURVE = "P-256";
 
-export const generateEcdhPair = async (): Promise<{
+export const generateExchangePair = async (): Promise<{
   publicKey: string;
   privateKey: string;
 }> => {
+  // const seed = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+  // const keys = generateKeyPair(seed);
   const keys = await crypto.subtle.generateKey(
     {
       name: ECDH_ALGORITHM,
@@ -17,6 +44,7 @@ export const generateEcdhPair = async (): Promise<{
   );
   const publicKey = await crypto.subtle.exportKey("spki", keys.publicKey);
   const privateKey = await crypto.subtle.exportKey("pkcs8", keys.privateKey);
+  console.log(Buffer.from(publicKey).length);
   return {
     publicKey: Buffer.from(publicKey).toString("base64"),
     privateKey: Buffer.from(privateKey).toString("base64"),
@@ -35,7 +63,7 @@ const importEcdhKey = (format: "spki" | "pkcs8", key: string) =>
     ["deriveKey"]
   );
 
-export const deriveEcdhSymKey = async (
+export const deriveExchangeSymKey = async (
   public_key: string,
   private_key: string
 ): Promise<string> => {

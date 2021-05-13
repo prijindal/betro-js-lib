@@ -7,8 +7,8 @@ import {
   symEncrypt,
   generateRsaPair,
   rsaEncrypt,
-  generateEcdhPair,
-  deriveEcdhSymKey,
+  generateExchangePair,
+  deriveExchangeSymKey,
   getMasterHash,
 } from "../src";
 import { ExampleFile } from "./Example";
@@ -42,9 +42,9 @@ const generateExampleJson = async () => {
     Buffer.from(originalText, "utf-8")
   );
 
-  const ecdhPair1 = await generateEcdhPair();
-  const ecdhPair2 = await generateEcdhPair();
-  const ecdhDerivedKey = await deriveEcdhSymKey(
+  const ecdhPair1 = await generateExchangePair();
+  const ecdhPair2 = await generateExchangePair();
+  const ecdhDerivedKey = await deriveExchangeSymKey(
     ecdhPair1.publicKey,
     ecdhPair2.privateKey
   );

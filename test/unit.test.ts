@@ -8,8 +8,8 @@ import {
   generateRsaPair,
   rsaDecrypt,
   rsaEncrypt,
-  generateEcdhPair,
-  deriveEcdhSymKey,
+  generateExchangePair,
+  deriveExchangeSymKey,
   getMasterHash,
 } from "../src";
 
@@ -51,13 +51,13 @@ describe("Crypto functions", () => {
   });
 
   it("Test ECDH algorithm", async () => {
-    const keyPair1 = await generateEcdhPair();
-    const keyPair2 = await generateEcdhPair();
-    const symKey1 = await deriveEcdhSymKey(
+    const keyPair1 = await generateExchangePair();
+    const keyPair2 = await generateExchangePair();
+    const symKey1 = await deriveExchangeSymKey(
       keyPair1.publicKey,
       keyPair2.privateKey
     );
-    const symKey2 = await deriveEcdhSymKey(
+    const symKey2 = await deriveExchangeSymKey(
       keyPair2.publicKey,
       keyPair1.privateKey
     );

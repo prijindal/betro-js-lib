@@ -1,5 +1,7 @@
 import "../src/setupNodePollyfill";
 import {
+  deriveExchangeSymKey,
+  generateExchangePair,
   generateRsaPair,
   generateSymKey,
   rsaDecrypt,
@@ -35,6 +37,22 @@ const symFunction = async () => {
   }
 };
 
+const exchangeFunction = async () => {
+  const keyPair1 = await generateExchangePair();
+  const keyPair2 = await generateExchangePair();
+  const key1 = await deriveExchangeSymKey(
+    keyPair1.publicKey,
+    keyPair2.privateKey
+  );
+  const key2 = await deriveExchangeSymKey(
+    keyPair2.publicKey,
+    keyPair1.privateKey
+  );
+  if (key1 !== key2) {
+    throw Error();
+  }
+};
+
 const testPerformance = async (
   N: number,
   funct: () => Promise<void>
@@ -52,6 +70,7 @@ describe("Crypto performance functions", () => {
   const performances = {
     rsa: Infinity,
     sym: Infinity,
+    exchange: Infinity,
   };
   it("RSA Performance", async () => {
     const rsaPerformance = await testPerformance(100, rsaFunction);
@@ -63,8 +82,14 @@ describe("Crypto performance functions", () => {
     expect(symPerformance).toBeLessThan(200);
     performances.sym = symPerformance;
   }, 20000);
+  it("Exchange Performance", async () => {
+    const exchangePerformance = await testPerformance(100, exchangeFunction);
+    expect(exchangePerformance).toBeLessThan(200);
+    performances.exchange = exchangePerformance;
+  }, 20000);
   afterAll(() => {
     console.log(`RSA Performance: ${performances.rsa}`);
     console.log(`Sym Key Performance: ${performances.sym}`);
+    console.log(`Exchange Performance: ${performances.exchange}`);
   });
 });

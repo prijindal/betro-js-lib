@@ -3,14 +3,9 @@ import "../src/setupNodePollyfill";
 import {
   getMasterKey,
   getEncryptionKey,
-  generateSymKey,
   symDecrypt,
-  symEncrypt,
-  generateRsaPair,
   rsaDecrypt,
-  rsaEncrypt,
-  generateEcdhPair,
-  deriveEcdhSymKey,
+  deriveExchangeSymKey,
   getMasterHash,
 } from "../src";
 import { ExampleFile } from "./Example";
@@ -65,7 +60,7 @@ describe("Example generated file", () => {
       encryptionKey,
       json.ecdh.keys[0].encryptedPrivateKey
     );
-    const derivedKey1 = await deriveEcdhSymKey(
+    const derivedKey1 = await deriveExchangeSymKey(
       json.ecdh.keys[1].publicKey,
       decryptedEcdhPrivateKey1.toString("base64")
     );
@@ -73,7 +68,7 @@ describe("Example generated file", () => {
       encryptionKey,
       json.ecdh.keys[1].encryptedPrivateKey
     );
-    const derivedKey2 = await deriveEcdhSymKey(
+    const derivedKey2 = await deriveExchangeSymKey(
       json.ecdh.keys[0].publicKey,
       decryptedEcdhPrivateKey2.toString("base64")
     );

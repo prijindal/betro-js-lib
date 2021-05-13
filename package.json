@@ -44,5 +44,8 @@
   },
   "optionalDependencies": {
     "@peculiar/webcrypto": "^1.1.7"
+  },
+  "dependencies": {
+    "curve25519-js": "^0.0.4"
   }
 }
