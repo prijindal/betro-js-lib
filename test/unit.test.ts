@@ -2,14 +2,14 @@ import "../src/setupNodePollyfill";
 import {
   getMasterKey,
   getEncryptionKey,
-  aesDecrypt,
-  aesEncrypt,
   generateSymKey,
   symDecrypt,
   symEncrypt,
   generateRsaPair,
   rsaDecrypt,
   rsaEncrypt,
+  generateEcdhPair,
+  deriveEcdhSymKey,
   getMasterHash,
 } from "../src";
 
@@ -18,25 +18,18 @@ const originalText = "Hello";
 describe("Crypto functions", () => {
   it("Test AES", async () => {
     const master_key = await getMasterKey("user@example.com", "123456");
-    const { encryption_key, encryption_mac } = await getEncryptionKey(
-      master_key
-    );
+    const encryption_key = await getEncryptionKey(master_key);
     const master_hash = await getMasterHash(master_key, "123456");
     expect(master_hash).toBeTruthy();
 
-    const encryptedData = await aesEncrypt(
+    const encryptedData = await symEncrypt(
       encryption_key,
-      encryption_mac,
       Buffer.from(originalText)
     );
 
-    const decrypted = await aesDecrypt(
-      encryption_key,
-      encryption_mac,
-      encryptedData
-    );
-    expect(decrypted.isVerified).toEqual(true);
-    expect(decrypted.data.toString()).toEqual(originalText);
+    const decrypted = await symDecrypt(encryption_key, encryptedData);
+    expect(decrypted).not.toBeNull();
+    expect(decrypted.toString()).toEqual(originalText);
   });
 
   it("Test Sym key", async () => {
@@ -55,5 +48,19 @@ describe("Crypto functions", () => {
 
     const rsaDecrypted = await rsaDecrypt(privateKey, rsaEncrypted);
     expect(rsaDecrypted.toString()).toEqual(originalText);
+  });
+
+  it("Test ECDH algorithm", async () => {
+    const keyPair1 = await generateEcdhPair();
+    const keyPair2 = await generateEcdhPair();
+    const symKey1 = await deriveEcdhSymKey(
+      keyPair1.publicKey,
+      keyPair2.privateKey
+    );
+    const symKey2 = await deriveEcdhSymKey(
+      keyPair2.publicKey,
+      keyPair1.privateKey
+    );
+    expect(symKey1).toEqual(symKey2);
   });
 });

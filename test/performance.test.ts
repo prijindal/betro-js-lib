@@ -14,7 +14,7 @@ if (global.performance == null) {
 
 const text = "Hello, this is a test script";
 
-const aesFunction = async () => {
+const rsaFunction = async () => {
   const rsaKeys = await generateRsaPair();
   const encrypted = await rsaEncrypt(
     rsaKeys.publicKey,
@@ -50,13 +50,13 @@ const testPerformance = async (
 
 describe("Crypto performance functions", () => {
   const performances = {
-    aes: Infinity,
+    rsa: Infinity,
     sym: Infinity,
   };
-  it("AES Performance", async () => {
-    const aesPerformance = await testPerformance(100, aesFunction);
-    expect(aesPerformance).toBeLessThan(200);
-    performances.aes = aesPerformance;
+  it("RSA Performance", async () => {
+    const rsaPerformance = await testPerformance(100, rsaFunction);
+    expect(rsaPerformance).toBeLessThan(200);
+    performances.rsa = rsaPerformance;
   }, 20000);
   it("Sym Key Performance", async () => {
     const symPerformance = await testPerformance(100, symFunction);
@@ -64,7 +64,7 @@ describe("Crypto performance functions", () => {
     performances.sym = symPerformance;
   }, 20000);
   afterAll(() => {
-    console.log(`Aes Performance: ${performances.aes}`);
+    console.log(`RSA Performance: ${performances.rsa}`);
     console.log(`Sym Key Performance: ${performances.sym}`);
   });
 });

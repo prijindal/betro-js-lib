@@ -1,2 +1,2 @@
-declare const moduleCrypto: Crypto;
-export default moduleCrypto;
+declare const _default: Crypto;
+export default _default;

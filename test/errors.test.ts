@@ -2,8 +2,6 @@ import "../src/setupNodePollyfill";
 import {
   getMasterKey,
   getEncryptionKey,
-  aesDecrypt,
-  aesEncrypt,
   generateSymKey,
   symDecrypt,
   symEncrypt,
@@ -18,28 +16,20 @@ const originalText = "Hello";
 describe("Crypto functions", () => {
   it("Test AES wrong encryption", async () => {
     const master_key = await getMasterKey("user@example.com", "123456");
-    const { encryption_key, encryption_mac } = await getEncryptionKey(
-      master_key
-    );
+    const encryption_key = await getEncryptionKey(master_key);
     const master_hash = await getMasterHash(master_key, "123456");
     expect(master_hash).toBeTruthy();
 
-    const encryptedData = await aesEncrypt(
+    const encryptedData = await symEncrypt(
       encryption_key,
-      encryption_mac,
       Buffer.from(originalText)
     );
 
     const new_master_key = await getMasterKey("user1@example.com", "123456");
-    const newKeys = await getEncryptionKey(new_master_key);
+    const newKey = await getEncryptionKey(new_master_key);
 
-    const decrypted = await aesDecrypt(
-      newKeys.encryption_key,
-      newKeys.encryption_mac,
-      encryptedData
-    );
-    expect(decrypted.isVerified).toEqual(false);
-    expect(decrypted.data).toBeNull();
+    const decrypted = await symDecrypt(newKey, encryptedData);
+    expect(decrypted).toBeNull();
   });
 
   it("Test Sym key wrong encryption", async () => {

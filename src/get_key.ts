@@ -55,14 +55,12 @@ const hkdfDeriveAndExport = async (key: CryptoKey, info: string) => {
   return exported_key;
 };
 
-export const getEncryptionKey = async (
-  master_key: string
-): Promise<{ encryption_key: string; encryption_mac: string }> => {
+export const getEncryptionKey = async (master_key: string): Promise<string> => {
   const key = await importKey(master_key, "HKDF");
   const encryption_key = await hkdfDeriveAndExport(key, "enc");
   const encryption_mac = await hkdfDeriveAndExport(key, "mac");
-  return {
-    encryption_key: Buffer.from(encryption_key).toString("base64"),
-    encryption_mac: Buffer.from(encryption_mac).toString("base64"),
-  };
+  return Buffer.concat([
+    Buffer.from(encryption_key),
+    Buffer.from(encryption_mac),
+  ]).toString("base64");
 };
