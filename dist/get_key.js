@@ -35,9 +35,9 @@ export const getEncryptionKey = async (master_key) => {
     const key = await importKey(master_key, "HKDF");
     const encryption_key = await hkdfDeriveAndExport(key, "enc");
     const encryption_mac = await hkdfDeriveAndExport(key, "mac");
-    return {
-        encryption_key: Buffer.from(encryption_key).toString("base64"),
-        encryption_mac: Buffer.from(encryption_mac).toString("base64"),
-    };
+    return Buffer.concat([
+        Buffer.from(encryption_key),
+        Buffer.from(encryption_mac),
+    ]).toString("base64");
 };
 //# sourceMappingURL=get_key.js.map

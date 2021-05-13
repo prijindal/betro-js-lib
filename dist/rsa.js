@@ -1,5 +1,5 @@
 import crypto from "./crypto";
-const RSA_ALGORITHM = "ECDSA";
+const RSA_ALGORITHM = "RSA-OAEP";
 const KEY_SIZE = 2048;
 const HASH = "SHA-256";
 export const generateRsaPair = async () => {
