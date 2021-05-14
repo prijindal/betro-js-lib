@@ -21,13 +21,13 @@ const generateExchangePair = async () => {
     };
 };
 exports.generateExchangePair = generateExchangePair;
-const importEcdhKey = (format, key) => crypto_1.default.subtle.importKey(format, Buffer.from(key, "base64"), {
+const importEcdhKey = (format, key, keyUsages) => crypto_1.default.subtle.importKey(format, Buffer.from(key, "base64"), {
     name: ECDH_ALGORITHM,
     namedCurve: NAMED_CURVE,
-}, false, ["deriveBits"]);
+}, false, keyUsages);
 const deriveExchangeSymKey = async (public_key, private_key) => {
-    const publicKey = await importEcdhKey("spki", public_key);
-    const privateKey = await importEcdhKey("pkcs8", private_key);
+    const publicKey = await importEcdhKey("spki", public_key, []);
+    const privateKey = await importEcdhKey("pkcs8", private_key, ["deriveBits"]);
     const keyData = await window.crypto.subtle.deriveBits({
         name: ECDH_ALGORITHM,
         // namedCurve: NAMED_CURVE, //can be "P-256", "P-384", or "P-521"
