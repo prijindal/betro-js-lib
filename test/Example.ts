@@ -24,6 +24,7 @@ export type ExampleFile = {
         encryptedPrivateKey: string;
       }
     ];
+    ecdhEncryptedSymKey: string;
     ecdhDerivedKeyMessage: string;
   };
 };

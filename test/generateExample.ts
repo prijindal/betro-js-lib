@@ -62,6 +62,10 @@ const generateExampleJson = async () => {
     encryptionKey,
     Buffer.from(ecdhPair2.privateKey, "base64")
   );
+  const ecdhEncryptedSymKey = await symEncrypt(
+    encryptionKey,
+    Buffer.from(ecdhDerivedKey, "base64")
+  );
 
   const json: ExampleFile = {
     email,
@@ -89,6 +93,7 @@ const generateExampleJson = async () => {
           encryptedPrivateKey: encryptedEcdhPrivateKey2,
         },
       ],
+      ecdhEncryptedSymKey,
       ecdhDerivedKeyMessage,
     },
   };

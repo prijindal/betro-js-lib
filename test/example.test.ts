@@ -72,7 +72,12 @@ describe("Example generated file", () => {
       json.ecdh.keys[0].publicKey,
       decryptedEcdhPrivateKey2.toString("base64")
     );
+    const edchDerivedKey = await symDecrypt(
+      encryptionKey,
+      json.ecdh.ecdhEncryptedSymKey
+    );
     expect(derivedKey1).toEqual(derivedKey2);
+    expect(edchDerivedKey.toString("base64")).toEqual(derivedKey1);
     const decryptedEcdhMessage = await symDecrypt(
       derivedKey1,
       json.ecdh.ecdhDerivedKeyMessage
