@@ -33,7 +33,7 @@ const importRsaKey = (
 ) =>
   crypto.subtle.importKey(
     format,
-    Buffer.from(key, "base64"),
+    Uint8Array.from(Buffer.from(key, "base64")),
     {
       name: RSA_ALGORITHM,
       hash: HASH,

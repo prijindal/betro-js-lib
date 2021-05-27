@@ -21,7 +21,7 @@ const generateExchangePair = async () => {
     };
 };
 exports.generateExchangePair = generateExchangePair;
-const importEcdhKey = (format, key, keyUsages) => crypto_1.default.subtle.importKey(format, Buffer.from(key, "base64"), {
+const importEcdhKey = (format, key, keyUsages) => crypto_1.default.subtle.importKey(format, Uint8Array.from(Buffer.from(key, "base64")), {
     name: ECDH_ALGORITHM,
     namedCurve: NAMED_CURVE,
 }, false, keyUsages);

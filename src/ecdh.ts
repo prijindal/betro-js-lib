@@ -32,7 +32,7 @@ const importEcdhKey = (
 ) =>
   crypto.subtle.importKey(
     format,
-    Buffer.from(key, "base64"),
+    Uint8Array.from(Buffer.from(key, "base64")),
     {
       name: ECDH_ALGORITHM,
       namedCurve: NAMED_CURVE,

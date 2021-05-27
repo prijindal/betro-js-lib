@@ -23,7 +23,7 @@ const generateRsaPair = async () => {
     };
 };
 exports.generateRsaPair = generateRsaPair;
-const importRsaKey = (format, key, keyUsage) => crypto_1.default.subtle.importKey(format, Buffer.from(key, "base64"), {
+const importRsaKey = (format, key, keyUsage) => crypto_1.default.subtle.importKey(format, Uint8Array.from(Buffer.from(key, "base64")), {
     name: RSA_ALGORITHM,
     hash: HASH,
 }, false, keyUsage);
