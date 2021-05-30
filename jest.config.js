@@ -20,5 +20,8 @@ module.exports = {
   }, {
     ...commonConfig,
     testEnvironment: "node",
+  }, {
+    ...commonConfig,
+    preset: "jest-puppeteer"
   }]
 };
