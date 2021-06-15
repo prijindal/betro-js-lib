@@ -13,7 +13,7 @@ import {
 
 const originalText = "Hello";
 
-describe("Crypto functions", () => {
+describe("Crypto Errors", () => {
   it("Test AES wrong encryption", async () => {
     const master_key = await getMasterKey("user@example.com", "123456");
     const encryption_key = await getEncryptionKey(master_key);

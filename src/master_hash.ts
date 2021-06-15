@@ -1,5 +1,5 @@
 import crypto from "./crypto";
-import { HASH_LENGTH, ITERATIONS } from "./constants";
+import { HASH_ALGORITHM, HASH_LENGTH, ITERATIONS } from "./constants";
 
 export const getMasterHash = async (
   master_key: string,
@@ -18,7 +18,7 @@ export const getMasterHash = async (
       name: "PBKDF2",
       salt,
       iterations: ITERATIONS,
-      hash: "SHA-256",
+      hash: HASH_ALGORITHM,
     },
     key,
     HASH_LENGTH

@@ -1,9 +1,12 @@
 import crypto from "./crypto";
+import { HASH_ALGORITHM, HASH_LENGTH } from "./constants";
 
 const HMAC_ALGORITHM = {
   name: "HMAC",
-  hash: "SHA-256",
+  hash: HASH_ALGORITHM,
 };
+
+const HMAC_LENGTH = HASH_LENGTH / 8;
 
 const algorithm = "AES-CBC";
 const KEY_SIZE = 256;
@@ -45,8 +48,8 @@ export const symEncrypt = async (
   data: Buffer
 ): Promise<string> => {
   const buffer = Buffer.from(sym_key, "base64");
-  const keyBuffer = buffer.slice(0, 32);
-  const hmacBuffer = buffer.slice(32);
+  const keyBuffer = buffer.slice(0, KEY_SIZE / 8);
+  const hmacBuffer = buffer.slice(KEY_SIZE / 8);
   const [key, hmac] = await Promise.all([
     importKey(keyBuffer, ["encrypt"]),
     importHmac(hmacBuffer, ["sign"]),
@@ -75,19 +78,19 @@ export const symDecrypt = async (
   encrypted_data: string
 ): Promise<Buffer | null> => {
   const buffer = Buffer.from(sym_key, "base64");
-  const keyBuffer = buffer.slice(0, 32);
-  const hmacBuffer = buffer.slice(32);
+  const keyBuffer = buffer.slice(0, KEY_SIZE / 8);
+  const hmacBuffer = buffer.slice(KEY_SIZE / 8);
   const [key, hmac] = await Promise.all([
     importKey(keyBuffer, ["decrypt"]),
     importHmac(hmacBuffer, ["verify"]),
   ]);
   const data_bytes = Buffer.from(encrypted_data, "base64");
-  const iv = data_bytes.slice(32, 32 + IV_LENGTH);
+  const iv = data_bytes.slice(HMAC_LENGTH, HMAC_LENGTH + IV_LENGTH);
   const isVerified = await crypto.subtle.verify(
     "HMAC",
     hmac,
-    data_bytes.slice(0, 32),
-    data_bytes.slice(32)
+    data_bytes.slice(0, HMAC_LENGTH),
+    data_bytes.slice(HMAC_LENGTH)
   );
   if (isVerified == false) {
     return null;

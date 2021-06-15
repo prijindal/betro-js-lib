@@ -1,8 +1,8 @@
 import crypto from "./crypto";
+import { HASH_ALGORITHM } from "./constants";
 const RSA_ALGORITHM = "RSA-OAEP";
 
 const KEY_SIZE = 2048;
-const HASH = "SHA-256";
 
 export const generateRsaPair = async (): Promise<{
   publicKey: string;
@@ -11,7 +11,7 @@ export const generateRsaPair = async (): Promise<{
   const keys = await crypto.subtle.generateKey(
     {
       name: RSA_ALGORITHM,
-      hash: HASH, // SHA-1, SHA-256, SHA-384, or SHA-512
+      hash: HASH_ALGORITHM,
       publicExponent: new Uint8Array([1, 0, 1]), // 0x03 or 0x010001
       modulusLength: KEY_SIZE, // 1024, 2048, or 4096
     },
@@ -36,7 +36,7 @@ const importRsaKey = (
     Uint8Array.from(Buffer.from(key, "base64")),
     {
       name: RSA_ALGORITHM,
-      hash: HASH,
+      hash: HASH_ALGORITHM,
     },
     false,
     keyUsage

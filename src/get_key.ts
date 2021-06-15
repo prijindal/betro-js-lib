@@ -1,6 +1,6 @@
 import crypto from "./crypto";
 
-import { HASH_LENGTH, ITERATIONS } from "./constants";
+import { HASH_LENGTH, ITERATIONS, HASH_ALGORITHM } from "./constants";
 
 const importKey = (key: Buffer, algorithm: string) =>
   crypto.subtle.importKey(
@@ -22,7 +22,7 @@ export const getMasterKey = async (
       name: "PBKDF2",
       salt,
       iterations: ITERATIONS,
-      hash: "SHA-256",
+      hash: HASH_ALGORITHM,
     },
     key,
     HASH_LENGTH
@@ -32,7 +32,7 @@ export const getMasterKey = async (
 
 const HKDF_ALGORITHM = {
   name: "HMAC",
-  hash: "SHA-256",
+  hash: HASH_ALGORITHM,
   length: HASH_LENGTH,
 };
 
@@ -40,7 +40,7 @@ const hkdfParameters = (info: string) => ({
   name: "HKDF",
   salt: Buffer.from("sign"),
   info: Buffer.from(info),
-  hash: "SHA-256",
+  hash: HASH_ALGORITHM,
 });
 
 const hkdfDeriveAndExport = async (key: CryptoKey, info: string) => {
