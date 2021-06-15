@@ -26,15 +26,25 @@ const importEcdhKey = (format, key, keyUsages) => crypto_1.default.subtle.import
     namedCurve: NAMED_CURVE,
 }, false, keyUsages);
 const deriveExchangeSymKey = async (public_key, private_key) => {
-    const publicKey = await importEcdhKey("spki", public_key, []);
-    const privateKey = await importEcdhKey("pkcs8", private_key, ["deriveBits"]);
+    const [publicKey, privateKey] = await Promise.all([
+        importEcdhKey("spki", public_key, []),
+        importEcdhKey("pkcs8", private_key, ["deriveBits"]),
+    ]);
     const keyData = await window.crypto.subtle.deriveBits({
         name: ECDH_ALGORITHM,
         // namedCurve: NAMED_CURVE, //can be "P-256", "P-384", or "P-521"
         public: publicKey, //an ECDH public key from generateKey or importKey
     }, privateKey, //your ECDH private key from generateKey or importKey
     256);
-    return get_key_1.getEncryptionKey(Buffer.from(keyData).toString("base64"));
+    const derivedKey = await crypto_1.default.subtle.importKey("raw", // only raw format
+    keyData, // BufferSource
+    "HKDF", false, // only false
+    ["deriveKey"]);
+    const [key, mac] = await Promise.all([
+        get_key_1.hkdfDeriveAndExport(derivedKey, "enc"),
+        get_key_1.hkdfDeriveAndExport(derivedKey, "mac"),
+    ]);
+    return Buffer.concat([Buffer.from(key), Buffer.from(mac)]).toString("base64");
 };
 exports.deriveExchangeSymKey = deriveExchangeSymKey;
 //# sourceMappingURL=ecdh.js.map

@@ -5,13 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rsaDecrypt = exports.rsaEncrypt = exports.generateRsaPair = void 0;
 const crypto_1 = __importDefault(require("./crypto"));
+const constants_1 = require("./constants");
 const RSA_ALGORITHM = "RSA-OAEP";
 const KEY_SIZE = 2048;
-const HASH = "SHA-256";
 const generateRsaPair = async () => {
     const keys = await crypto_1.default.subtle.generateKey({
         name: RSA_ALGORITHM,
-        hash: HASH,
+        hash: constants_1.HASH_ALGORITHM,
         publicExponent: new Uint8Array([1, 0, 1]),
         modulusLength: KEY_SIZE, // 1024, 2048, or 4096
     }, true, ["encrypt", "decrypt"]);
@@ -25,7 +25,7 @@ const generateRsaPair = async () => {
 exports.generateRsaPair = generateRsaPair;
 const importRsaKey = (format, key, keyUsage) => crypto_1.default.subtle.importKey(format, Uint8Array.from(Buffer.from(key, "base64")), {
     name: RSA_ALGORITHM,
-    hash: HASH,
+    hash: constants_1.HASH_ALGORITHM,
 }, false, keyUsage);
 const rsaEncrypt = async (public_key, data) => {
     const publicKey = await importRsaKey("spki", public_key, ["encrypt"]);

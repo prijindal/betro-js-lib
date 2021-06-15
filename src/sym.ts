@@ -73,11 +73,10 @@ export const symEncrypt = async (
   return encrypted.toString("base64");
 };
 
-export const symDecrypt = async (
-  sym_key: string,
+export const symDecryptBuffer = async (
+  buffer: Buffer,
   encrypted_data: string
 ): Promise<Buffer | null> => {
-  const buffer = Buffer.from(sym_key, "base64");
   const keyBuffer = buffer.slice(0, KEY_SIZE / 8);
   const hmacBuffer = buffer.slice(KEY_SIZE / 8);
   const [key, hmac] = await Promise.all([
@@ -104,4 +103,12 @@ export const symDecrypt = async (
     data_bytes.slice(32 + IV_LENGTH) // BufferSource
   );
   return Buffer.from(data);
+};
+
+export const symDecrypt = async (
+  sym_key: string,
+  encrypted_data: string
+): Promise<Buffer | null> => {
+  const buffer = Buffer.from(sym_key, "base64");
+  return symDecryptBuffer(buffer, encrypted_data);
 };

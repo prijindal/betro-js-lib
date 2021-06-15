@@ -43,7 +43,10 @@ const hkdfParameters = (info: string) => ({
   hash: HASH_ALGORITHM,
 });
 
-const hkdfDeriveAndExport = async (key: CryptoKey, info: string) => {
+export const hkdfDeriveAndExport = async (
+  key: CryptoKey,
+  info: string
+): Promise<ArrayBuffer> => {
   const key_crypto = await crypto.subtle.deriveKey(
     hkdfParameters(info),
     key,

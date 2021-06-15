@@ -16,7 +16,7 @@ const getMasterHash = async (master_key, password) => {
         name: "PBKDF2",
         salt,
         iterations: constants_1.ITERATIONS,
-        hash: "SHA-256",
+        hash: constants_1.HASH_ALGORITHM,
     }, key, constants_1.HASH_LENGTH);
     return Buffer.from(derivedBits).toString("base64");
 };

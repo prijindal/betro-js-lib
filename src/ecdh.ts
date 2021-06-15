@@ -1,5 +1,5 @@
 import crypto from "./crypto";
-import { getEncryptionKey } from "./get_key";
+import { getEncryptionKey, hkdfDeriveAndExport } from "./get_key";
 
 const ECDH_ALGORITHM = "ECDH";
 
@@ -45,8 +45,10 @@ export const deriveExchangeSymKey = async (
   public_key: string,
   private_key: string
 ): Promise<string> => {
-  const publicKey = await importEcdhKey("spki", public_key, []);
-  const privateKey = await importEcdhKey("pkcs8", private_key, ["deriveBits"]);
+  const [publicKey, privateKey] = await Promise.all([
+    importEcdhKey("spki", public_key, []),
+    importEcdhKey("pkcs8", private_key, ["deriveBits"]),
+  ]);
   const keyData = await window.crypto.subtle.deriveBits(
     {
       name: ECDH_ALGORITHM,
@@ -56,5 +58,16 @@ export const deriveExchangeSymKey = async (
     privateKey, //your ECDH private key from generateKey or importKey
     256
   );
-  return getEncryptionKey(Buffer.from(keyData).toString("base64"));
+  const derivedKey = await crypto.subtle.importKey(
+    "raw", // only raw format
+    keyData, // BufferSource
+    "HKDF",
+    false, // only false
+    ["deriveKey"]
+  );
+  const [key, mac] = await Promise.all([
+    hkdfDeriveAndExport(derivedKey, "enc"),
+    hkdfDeriveAndExport(derivedKey, "mac"),
+  ]);
+  return Buffer.concat([Buffer.from(key), Buffer.from(mac)]).toString("base64");
 };
