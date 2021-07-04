@@ -42,7 +42,7 @@
     "puppeteer": "^9.1.1",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.5"
   },
   "optionalDependencies": {
     "@peculiar/webcrypto": "^1.1.7"
