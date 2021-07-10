@@ -1,5 +1,5 @@
 import crypto from "./crypto";
-import { getEncryptionKey, hkdfDeriveAndExport } from "./get_key";
+import { hkdfDeriveAndExport } from "./get_key";
 
 const ECDH_ALGORITHM = "ECDH";
 

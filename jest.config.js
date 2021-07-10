@@ -17,10 +17,6 @@ module.exports = {
   projects: [
     {
       ...commonConfig,
-      testEnvironment: "jsdom",
-    },
-    {
-      ...commonConfig,
       testEnvironment: "node",
     },
     {

@@ -11,6 +11,9 @@ import {
   generateExchangePair,
   deriveExchangeSymKey,
   getMasterHash,
+  generateEcdsaPair,
+  signEcdsa,
+  verifyEcdsa,
 } from "../src";
 
 const originalText = "Hello";
@@ -62,5 +65,19 @@ describe("Crypto functions", () => {
       keyPair1.privateKey
     );
     expect(symKey1).toEqual(symKey2);
+  });
+
+  it("Test ECDSA Signing", async () => {
+    const keyPair = await generateEcdsaPair();
+    const signature = await signEcdsa(
+      keyPair.privateKey,
+      Buffer.from(originalText)
+    );
+    const verified = await verifyEcdsa(
+      keyPair.publicKey,
+      Buffer.from(originalText),
+      signature
+    );
+    expect(verified).toEqual(true);
   });
 });

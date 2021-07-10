@@ -9,6 +9,9 @@ import {
   rsaDecrypt,
   rsaEncrypt,
   getMasterHash,
+  generateEcdsaPair,
+  signEcdsa,
+  verifyEcdsa,
 } from "../src";
 
 const originalText = "Hello";
@@ -52,5 +55,20 @@ describe("Crypto Errors", () => {
 
     const rsaDecrypted = await rsaDecrypt(newKeys.privateKey, rsaEncrypted);
     expect(rsaDecrypted).toBeNull();
+  });
+
+  it("Test ECDSA Wrong Signing", async () => {
+    const keyPair1 = await generateEcdsaPair();
+    const keyPair2 = await generateEcdsaPair();
+    const signature = await signEcdsa(
+      keyPair1.privateKey,
+      Buffer.from(originalText)
+    );
+    const verified = await verifyEcdsa(
+      keyPair2.publicKey,
+      Buffer.from(originalText),
+      signature
+    );
+    expect(verified).toEqual(false);
   });
 });
