@@ -15,4 +15,5 @@ __exportStar(require("./rsa"), exports);
 __exportStar(require("./sym"), exports);
 __exportStar(require("./ecdh"), exports);
 __exportStar(require("./master_hash"), exports);
+__exportStar(require("./ecdsa"), exports);
 //# sourceMappingURL=index.js.map
