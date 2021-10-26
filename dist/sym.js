@@ -76,7 +76,7 @@ const symDecryptBuffer = async (buffer, encrypted_data) => {
 exports.symDecryptBuffer = symDecryptBuffer;
 const symDecrypt = async (sym_key, encrypted_data) => {
     const buffer = Buffer.from(sym_key, "base64");
-    return exports.symDecryptBuffer(buffer, encrypted_data);
+    return (0, exports.symDecryptBuffer)(buffer, encrypted_data);
 };
 exports.symDecrypt = symDecrypt;
 //# sourceMappingURL=sym.js.map

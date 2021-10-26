@@ -41,8 +41,8 @@ const hkdfDeriveAndExport = async (key, info) => {
 exports.hkdfDeriveAndExport = hkdfDeriveAndExport;
 const getEncryptionKey = async (master_key) => {
     const key = await importKey(Buffer.from(master_key, "base64"), "HKDF");
-    const encryption_key = await exports.hkdfDeriveAndExport(key, "enc");
-    const encryption_mac = await exports.hkdfDeriveAndExport(key, "mac");
+    const encryption_key = await (0, exports.hkdfDeriveAndExport)(key, "enc");
+    const encryption_mac = await (0, exports.hkdfDeriveAndExport)(key, "mac");
     return Buffer.concat([
         Buffer.from(encryption_key),
         Buffer.from(encryption_mac),

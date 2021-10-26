@@ -41,8 +41,8 @@ const deriveExchangeSymKey = async (public_key, private_key) => {
     "HKDF", false, // only false
     ["deriveKey"]);
     const [key, mac] = await Promise.all([
-        get_key_1.hkdfDeriveAndExport(derivedKey, "enc"),
-        get_key_1.hkdfDeriveAndExport(derivedKey, "mac"),
+        (0, get_key_1.hkdfDeriveAndExport)(derivedKey, "enc"),
+        (0, get_key_1.hkdfDeriveAndExport)(derivedKey, "mac"),
     ]);
     return Buffer.concat([Buffer.from(key), Buffer.from(mac)]).toString("base64");
 };
