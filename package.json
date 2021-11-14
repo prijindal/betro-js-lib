@@ -45,6 +45,6 @@
     "typescript": "^4.4.4"
   },
   "optionalDependencies": {
-    "@peculiar/webcrypto": "^1.2.0"
+    "@peculiar/webcrypto": "^1.2.2"
   }
 }
