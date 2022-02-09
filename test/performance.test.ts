@@ -74,17 +74,17 @@ describe("Crypto performance functions", () => {
   };
   it("RSA Performance", async () => {
     const rsaPerformance = await testPerformance(100, rsaFunction);
-    expect(rsaPerformance).toBeLessThan(200);
+    expect(rsaPerformance).toBeLessThan(400);
     performances.rsa = rsaPerformance;
   }, 20000);
   it("Sym Key Performance", async () => {
     const symPerformance = await testPerformance(100, symFunction);
-    expect(symPerformance).toBeLessThan(200);
+    expect(symPerformance).toBeLessThan(400);
     performances.sym = symPerformance;
   }, 20000);
   it("Exchange Performance", async () => {
     const exchangePerformance = await testPerformance(100, exchangeFunction);
-    expect(exchangePerformance).toBeLessThan(200);
+    expect(exchangePerformance).toBeLessThan(400);
     performances.exchange = exchangePerformance;
   }, 20000);
   afterAll(() => {
