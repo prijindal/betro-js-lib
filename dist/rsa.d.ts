@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export declare const generateRsaPair: () => Promise<{
     publicKey: string;
     privateKey: string;
