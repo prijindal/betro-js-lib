@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export declare const generateEcdsaPair: () => Promise<{
     publicKey: string;
     privateKey: string;
